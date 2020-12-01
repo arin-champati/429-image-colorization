@@ -58,12 +58,14 @@ def __loop_filetree(image_path, file_list, size):
         color_images[i,:,:,:] = im_color
         gray_images[i,:,:,:] = im_gray
         labels_ab[i,:,:,:] = im_color_ab
-        labels_quantized_ab[i,:,:,:] = im_quantized
+        labels_quantized_ab[i,:,:,:] = im_quantized 
+    
+    print('finished')
     
     return color_images, gray_images, labels_ab, labels_quantized_ab
 
 
-def convert_images(image_path, train_label_path, test_label_path, size=64):
+def convert_images(image_path, label_path, size=64):
     """
     image_path: string - path to image files
     label_path: path to .mat needed to label every image
@@ -71,20 +73,12 @@ def convert_images(image_path, train_label_path, test_label_path, size=64):
     summary: Creates list of tuples of images and labels
     """
 
-    train_mat_file = scipy.io.loadmat(train_label_path)      
-    train_color, train_gray, train_ab, train_quantized = __loop_filetree(image_path, train_mat_file['file_list'], size)
+    mat_file = scipy.io.loadmat(label_path)      
+    color, gray, ab, quantized = __loop_filetree(image_path, mat_file['file_list'], size)
 
-    print('training done')
+    data = {'rgb_images': color, 'gray_images': gray, 'ab_images': ab, 'quantized_images': quantized}
 
-    test_mat_file = scipy.io.loadmat(test_label_path)
-    test_color, test_gray, test_ab, test_quantized = __loop_filetree(image_path, test_mat_file['file_list'], size)
-    
-    print('testing done')
-
-    train_data = {'rgb_images': train_color, 'gray_images': train_gray, 'ab_images': train_ab, 'quantized_images': train_quantized}
-    test_data = {'rgb_images': test_color, 'gray_images': test_gray, 'ab_images': test_ab, 'quantized_images': test_quantized}
-
-    return train_data, test_data
+    return data
 
 def save_data(images, save_path):
     """
@@ -110,20 +104,24 @@ def load_data(save_path):
     return images
 
 if __name__ == "__main__":
-    train_data, test_data = convert_images(os.path.join(DATASET_PATH, 'Images'), os.path.join(DATASET_PATH,'lists/train_list.mat'), os.path.join(DATASET_PATH,'lists/test_list.mat'))
+    train_data = convert_images(os.path.join(DATASET_PATH, 'Images'), os.path.join(DATASET_PATH,'lists/train_list.mat'))
 
     save_data(train_data, os.path.join(PICKLE_PATH, 'train_data.pkl'))
-    save_data(test_data, os.path.join(PICKLE_PATH, 'test_data.pkl'))
 
-    train_data = load_data(os.path.join(PICKLE_PATH, 'train_data.pkl'))
-    test_data = load_data(os.path.join(PICKLE_PATH, 'test_data.pkl'))
+    # train_data = load_data(os.path.join(PICKLE_PATH, 'train_data.pkl'))
 
-    print(train_data['rgb_images'].shape)
-    print(train_data['gray_images'].shape)
-    print(train_data['ab_images'].shape)
-    print(train_data['quantized_images'].shape)
+    # print(train_data['rgb_images'].shape)
+    # print(train_data['gray_images'].shape)
+    # print(train_data['ab_images'].shape)
+    # print(train_data['quantized_images'].shape)
 
-    print(test_data['rgb_images'].shape)
-    print(test_data['gray_images'].shape)
-    print(test_data['ab_images'].shape)
-    print(test_data['quantized_images'].shape)
+    # test_data = convert_images(os.path.join(DATASET_PATH, 'Images'), os.path.join(DATASET_PATH,'lists/test_list.mat'))
+
+    # save_data(test_data, os.path.join(PICKLE_PATH, 'test_data.pkl'))
+
+    # test_data = load_data(os.path.join(PICKLE_PATH, 'test_data.pkl'))
+
+    # print(test_data['rgb_images'].shape)
+    # print(test_data['gray_images'].shape)
+    # print(test_data['ab_images'].shape)
+    # print(test_data['quantized_images'].shape)

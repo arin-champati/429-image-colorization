@@ -33,7 +33,7 @@ def __loop_filetree(image_path, file_list, size):
     
     return gray_images, labels_ab
 
-def convert_images(image_path, label_path, size=64):
+def convert_images(image_path, label_path, size=256):
     """
     image_path: string - path to image files
     label_path: path to .mat needed to label every image

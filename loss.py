@@ -1,11 +1,11 @@
 import numpy as np
 import keras.backend as K
-from utils import get_qab, annealed_mean
+from helpers.utils import annealed_mean, get_qab
 
 prior_factor = np.load("data/prior_probs.npy").astype(np.float32)
 
 
-def categorical_crossentropy_color(y_true_quantized, y_pred):
+def categorical_crossentropy_color(y_true, y_pred):
 
     q = 313
     y_true = K.reshape(y_true, (-1, q))

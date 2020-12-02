@@ -15,11 +15,12 @@ from utils import *
 DATASET_PATH = './Data/Stanford Dog Dataset'
 PICKLE_PATH = './Data/Preprocessed Data'
 
+
 def __loop_filetree(image_path, file_list, size):
     """
     Helper to loop over filetree
     """
-    gray_images = np.zeros((len(file_list), size, size))
+    gray_images = np.zeros((len(file_list), size, size, 1))
     labels_ab = np.zeros((len(file_list), size, size, 2))
 
     for i, file_name in enumerate(file_list):
@@ -30,10 +31,11 @@ def __loop_filetree(image_path, file_list, size):
 
         gray_images[i] = im_gray
         labels_ab[i] = im_color_ab
-    
+
     return gray_images, labels_ab
 
-def convert_images(image_path, label_path, size=256):
+
+def convert_images(image_path, label_path, size=64):
     """
     image_path: string - path to image files
     label_path: path to .mat needed to label every image
@@ -41,12 +43,13 @@ def convert_images(image_path, label_path, size=256):
     summary: Creates list of tuples of images and labels
     """
 
-    mat_file = scipy.io.loadmat(label_path)      
+    mat_file = scipy.io.loadmat(label_path)
     gray, ab = __loop_filetree(image_path, mat_file['file_list'], size)
 
     data = {'gray_images': gray, 'ab_images': ab}
 
     return data
+
 
 def save_data(images, save_path):
     """
@@ -59,6 +62,7 @@ def save_data(images, save_path):
     with open(save_path, 'wb') as f:
         pickle.dump(images, f)
 
+
 def load_data(save_path):
     """
     save_path: exact location of numpy data
@@ -68,11 +72,13 @@ def load_data(save_path):
 
     with open(save_path, 'rb') as f:
         images = pickle.load(f)
-    
+
     return images
 
+
 if __name__ == "__main__":
-    train_data = convert_images(os.path.join(DATASET_PATH, 'Images'), os.path.join(DATASET_PATH,'lists/train_list.mat'))
+    train_data = convert_images(os.path.join(DATASET_PATH, 'Images'), os.path.join(
+        DATASET_PATH, 'lists/train_list.mat'))
 
     save_data(train_data, os.path.join(PICKLE_PATH, 'train_data.pkl'))
 
@@ -81,7 +87,8 @@ if __name__ == "__main__":
     print(train_data['gray_images'].shape)
     print(train_data['ab_images'].shape)
 
-    test_data = convert_images(os.path.join(DATASET_PATH, 'Images'), os.path.join(DATASET_PATH,'lists/test_list.mat'))
+    test_data = convert_images(os.path.join(DATASET_PATH, 'Images'), os.path.join(
+        DATASET_PATH, 'lists/test_list.mat'))
 
     save_data(test_data, os.path.join(PICKLE_PATH, 'test_data.pkl'))
 

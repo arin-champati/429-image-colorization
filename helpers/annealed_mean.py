@@ -2,6 +2,8 @@ import keras.backend as K
 import numpy as np
 import cv2
 from sklearn.neighbors import NearestNeighbors
+import tensorflow as tf
+from tensorflow.python.keras import backend
 
 gamut = np.load('Data/pts_in_hull.npy', allow_pickle=True)
 nn = NearestNeighbors(n_neighbors=5, algorithm='auto').fit(gamut)
@@ -14,14 +16,13 @@ def annealed_softmax(qab, temperature=0.38):
     return expon
 
 
-def annealed_mean(qab, temperature=1):
+def annealed_mean(qab, temperature=0.38):
     qab = annealed_softmax(qab, temperature)
     am = K.dot(qab, gamut_tensor)
     return am
 
 
 def get_qab(img_ab, sigma=5, bins=313):
-
     # gets num_nb nearest neighbors
     h, w, _ = img_ab.shape
     a = np.ravel(img_ab[:, :, 0])
@@ -35,4 +36,4 @@ def get_qab(img_ab, sigma=5, bins=313):
     soft_encoding = np.zeros((ab.shape[0], bins))
     pts = np.expand_dims(np.arange(h*w), axis=-1)
     soft_encoding[pts, idx] = gaussian
-    return K.constant(soft_encoding.reshape(h, w, bins))
+    return soft_encoding.reshape(h, w, bins)

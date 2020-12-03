@@ -1,5 +1,5 @@
 from model_paper import build_model
-from loss import loss
+from loss import lab_loss
 from config import *
 import tensorflow as tf
 import keras.backend as K
@@ -15,18 +15,15 @@ def get_training_data(data_path):
 
 def train():
     model = build_model()
-    model.compile(optimizer='adam', loss=loss, metrics=[
-                  tf.keras.metrics.MeanSquaredError()])
+    model.compile(optimizer='adam', loss=lab_loss)
     print(model.summary())
 
     train_examples, train_labels = get_training_data(
-        'train_25.npz')
+        'train_full.npz')
     train_data = tf.data.Dataset.from_tensor_slices(
         (train_examples, train_labels))
-    train_data = train_data.shuffle(
-        20).batch(2)
-    epochs = 10
-
+    train_data = train_data.shuffle(100).batch(32)
+    epochs = 2
     history = model.fit(train_data, epochs=epochs)
 
 

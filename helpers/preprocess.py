@@ -28,8 +28,10 @@ def get_ab(img):
 
 
 def get_data(path, size=64):
-    img = resize_img(load_img(path), size)
-    img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).reshape(size, size, 1)
+    img = load_img(path)
+    img = resize_img(img, 256)
+    img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).reshape(256, 256, 1)
+    img = resize_img(img, 64)
     img_ab = get_ab(img)
     return img_gray, img_ab
 
@@ -38,7 +40,7 @@ def __loop_filetree(image_path, file_list, size):
     """
     Helper to loop over filetree
     """
-    gray_images = np.zeros((len(file_list), size, size, 1))
+    gray_images = np.zeros((len(file_list), 256, 256, 1))
     labels_ab = np.zeros((len(file_list), size, size, 2))
 
     for i, file_name in enumerate(file_list):
@@ -49,6 +51,9 @@ def __loop_filetree(image_path, file_list, size):
 
         gray_images[i] = im_gray
         labels_ab[i] = im_color_ab
+
+    np.savez('train_full.npz', gray_images, labels_ab)
+    print('done')
 
     return gray_images, labels_ab
 

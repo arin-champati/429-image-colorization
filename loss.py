@@ -1,8 +1,9 @@
 import numpy as np
 import keras.backend as K
+from keras.losses import MSE
 from helpers.utils import annealed_mean, get_qab
 
-prior_factor = np.load("data/prior_probs.npy").astype(np.float32)
+prior_probs = np.load("data/prior_probs.npy").astype(np.float32)
 
 
 def categorical_crossentropy_color(y_true, y_pred):
@@ -12,7 +13,7 @@ def categorical_crossentropy_color(y_true, y_pred):
     y_pred = K.reshape(y_pred, (-1, q))
 
     idx_max = K.argmax(y_true, axis=1)
-    weights = K.gather(prior_factor, idx_max)
+    weights = K.gather(prior_probs, idx_max)
     weights = K.reshape(weights, (-1, 1))
 
     # multiply y_true by weights
@@ -25,22 +26,19 @@ def categorical_crossentropy_color(y_true, y_pred):
 
 
 def regression_loss_color(y_true, y_pred):
-    actual_image = annealed_mean(y_pred)
-    mse = K.mean(K.square(actual_image - y_true), axis=-1)
-    return mse
+    image_pred = annealed_mean(y_pred)
+    mse = MSE(y_true, image_pred)
+    return K.mean(mse)
 
 
-def loss(y_true, y_pred):
+def lab_loss(y_true, y_pred):
     gt = get_qab(y_true)
-    alpha = 0.5
-
-    # cross-entropy
-    categorical_crossentropy_color(gt, y_pred)
+    alpha = 0.1
 
     # regression loss
-    regression_loss_color(y_true, y_pred)
+    rl = regression_loss_color(y_true, y_pred)
 
-    final_loss = categorical_crossentropy_color + \
-        (alpha * regression_loss_color)
+    # output loss
+    final_loss = cl + alpha * rl
 
     return final_loss

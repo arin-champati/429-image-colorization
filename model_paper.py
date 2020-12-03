@@ -5,8 +5,7 @@ from keras.models import Model, load_model
 from keras.regularizers import l2
 from keras.utils import multi_gpu_model
 from keras.utils import plot_model
-
-
+import caffe2 as caffe
 from config import img_rows, img_cols, num_classes, kernel
 
 l2_reg = l2(1e-3)
@@ -91,10 +90,12 @@ def build_model_pretrained():
     conv8_1 = model.get_layer('conv8_1')
     conv8_2 = model.get_layer('conv8_2')
     conv8_3 = model.get_layer('conv8_3')
+    bnorm = model.get_layer('batch_normalization_8')
     outputs = model.get_layer('pred')
-    conv8_1.trainable = True
-    conv8_2.trainable = True
+    #conv8_1.trainable = True
+    #conv8_2.trainable = True
     conv8_3.trainable = True
+    bnorm.trainable = True
     outputs.trainable = True
     return model
 

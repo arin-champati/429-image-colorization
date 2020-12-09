@@ -1,3 +1,5 @@
+# https://github.com/foamliu/Colorful-Image-Colorization/blob/master/model.py
+
 import tensorflow as tf
 import keras.backend as K
 from keras.layers import Input, Conv2D, BatchNormalization, UpSampling2D

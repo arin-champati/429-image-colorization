@@ -1,3 +1,5 @@
+# https://github.com/richzhang/colorization/blob/master/colorizers/eccv16.py
+
 import torch
 import torch.nn as nn
 import numpy as np

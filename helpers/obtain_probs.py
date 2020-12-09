@@ -150,17 +150,8 @@ def get_joint_prob(size=100, gamma=0.1, sigma=3, ab=False):
 
     # set prior factor
     prior_factor = 1/prior_mix
-    prior_factor = prior_factor / \
-        np.sum(prior_probs*prior_factor)  # re-normalize
-
-    # implied empirical prior
-    implied_prior = prior_probs*prior_factor
-    implied_prior = implied_prior/np.sum(implied_prior)  # re-normalize
-
-    reciprocal = 1/implied_prior
-    reciprocal /= np.sum(reciprocal*prior_probs)
-    print(reciprocal)
-    return reciprocal
+    out = prior_factor / np.sum(prior_factor * prior_probs)
+    return out
 
 
 def save_probs(size=100, ab=False):

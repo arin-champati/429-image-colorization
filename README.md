@@ -1,1 +1,1 @@
-# A New Take on Colorful Image Colorization
+# Small-Scale Automatic Image Colorization

@@ -14,4 +14,4 @@ You can read our analysis on different color spaces, quantization bin sizes, eff
 
 Thanks for visiting!
 
-![Alt text](images/example_output.png?raw=true)
+![Alt text](images/example_outputs.png?raw=true)

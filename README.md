@@ -13,3 +13,5 @@ We accomplished this task with a small dataset and very little computational res
 You can read our analysis on different color spaces, quantization bin sizes, effect of transfer learning, final results, etc. in the paper included in this GitHub repository. If you are curious about our implementation, our code is included in the repository as well, albeit a little messy. 
 
 Thanks for visiting!
+
+![Alt text](images/example_output.png?raw=true)

@@ -6,7 +6,7 @@ Contributors:
 Arin Champati, Brendan Houle, Byron Zhang
 
 Description: 
-We attempted to colorize grayscale images from the CIFAR-10 dataset without the naive approach of regression. We instead classified pixels within a quantized color space, preferring colors that are more rare in the dataset's color distribution.
+We attempted to colorize grayscale images from the CIFAR-10 dataset without the naive approach of regression. Instead, we classified pixels within a quantized color space, preferring colors that are more rare in the dataset's color distribution.
 
 We accomplished this task with a small dataset and very little computational resources due to our optimization of the quantization method and utilizing transfer learning from ImageNet. 
 
